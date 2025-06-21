@@ -38,7 +38,7 @@ app.post("/transcription", (req, res) => {
   // Send email with the order details
   const mailOptions = {
     from: '"900 Degrees Bot" <no-reply@900degrees.com>',
-    to: "la.martinezsalom@gmail.com",
+    to: "masterofluck2018@gmail.com",
     subject: "📦 New Pizza Order from Phone Bot",
     html: `<h2>🔥 New Order Received</h2><p><strong>Order:</strong> ${orderText}</p><p><em>Received via voice call transcription.</em></p>`
   };
