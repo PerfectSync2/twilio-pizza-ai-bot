@@ -24,7 +24,7 @@ app.post("/voice", (req, res) => {
   response.record({
     timeout: 5,
     transcribe: true,
-    transcribeCallback: "https://twilio-pizza-ai-bot.onrender.com/transcription"
+    transcribeCallback: "https://twilio-pizza-ai-bot.onrender.com/transcription",
     action: "https://twilio-pizza-ai-bot.onrender.com/voice",
     method: "POST",
     playBeep: true
