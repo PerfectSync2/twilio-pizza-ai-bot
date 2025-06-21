@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Configure nodemailer
 const transporter = nodemailer.createTransport({
