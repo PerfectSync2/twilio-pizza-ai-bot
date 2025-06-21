@@ -34,6 +34,8 @@ app.post("/voice", (req, res) => {
 });
 
 app.post("/transcription", (req, res) => {
+  console.log("✉️ Reached transcription endpoint");
+console.log("📄 Transcription text:", req.body.TranscriptionText);
   const orderText = req.body.TranscriptionText || "No transcription available.";
   const response = new VoiceResponse();
 
