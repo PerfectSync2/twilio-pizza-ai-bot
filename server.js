@@ -16,6 +16,8 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post("/voice", (req, res) => {
+  console.log("🔊 Incoming voice call from Twilio");
+  console.log("📨 Request body:", req.body);
   const response = new VoiceResponse();
   response.say("Hi! Thank you for calling 900 Degrees Woodfired Pizza. What can I get started for you today?");
   response.record({
