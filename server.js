@@ -55,6 +55,7 @@ console.log("📄 Transcription text:", req.body.TranscriptionText);
       console.log("Order emailed successfully:", info.response);
     }
   });
+  response.hangup();
 
   res.type("text/xml");
   res.send(response.toString());
