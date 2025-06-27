@@ -2,6 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { twiml: { VoiceResponse } } = require("twilio");
 const nodemailer = require("nodemailer");
+const OpenAI = require("openai");
+
+// Initialize OpenAI
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,13 +38,27 @@ app.post("/voice", (req, res) => {
   res.send(response.toString());
 });
 
-app.post("/transcription", (req, res) => {
+app.post("/transcription", async (req, res) => {
 console.log("✉️ Reached transcription endpoint");
 console.log("📄 Transcription text:", req.body.TranscriptionText);
   const orderText = req.body.TranscriptionText || "No transcription available.";
   const response = new VoiceResponse();
 
-  response.say(`Great! You ordered: ${orderText}. We’ll start prepping that right away. A confirmation will be sent shortly. Thanks for choosing 900 Degrees.`);
+  let aiReply = `Great! You ordered: ${orderText}. We’ll start prepping that right away.`;
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: "You are a friendly pizza shop assistant confirming phone orders." },
+        { role: "user", content: orderText }
+      ],
+    });
+    aiReply = completion.choices[0].message.content.trim();
+  } catch (err) {
+    console.error("OpenAI error:", err);
+  }
+
+  response.say(aiReply);
 
   // Send email with the order details
   const mailOptions = {
