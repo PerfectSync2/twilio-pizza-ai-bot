@@ -8,10 +8,10 @@
 4. Set:
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
-  - Add three Environment Variables:
+  - Add these Environment Variables:
     - `EMAIL_USER`: your Gmail address (e.g. la.martinezsalom@gmail.com)
     - `EMAIL_PASS`: your Gmail app password (NOT your actual password — generate one at https://myaccount.google.com/apppasswords)
-    - `OPENAI_API_KEY`: your OpenAI API key for generating responses
+    - `OPENAI_API_KEY` *(optional)*: your OpenAI API key for AI order confirmations
 5. After deploy, go to Twilio Console > Phone Numbers > Active Number
    - Set **Voice > A Call Comes In > Webhook**
    - Paste your Render URL + `/voice` (e.g. `https://yourapp.onrender.com/voice`)
@@ -23,3 +23,4 @@ This bot:
 - Repeats the order to the caller
 - Sends a formatted email to your inbox with the order
 - Uses ChatGPT to confirm the order in a natural way
+- Falls back to a basic confirmation if no OpenAI key is provided

@@ -2,12 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { twiml: { VoiceResponse } } = require("twilio");
 const nodemailer = require("nodemailer");
-const OpenAI = require("openai");
-
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  const OpenAI = require("openai");
+  openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+} else {
+  console.warn("OPENAI_API_KEY not set; using basic order confirmation.");
+}
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -45,17 +46,19 @@ console.log("📄 Transcription text:", req.body.TranscriptionText);
   const response = new VoiceResponse();
 
   let aiReply = `Great! You ordered: ${orderText}. We’ll start prepping that right away.`;
-  try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: "You are a friendly pizza shop assistant confirming phone orders." },
-        { role: "user", content: orderText }
-      ],
-    });
-    aiReply = completion.choices[0].message.content.trim();
-  } catch (err) {
-    console.error("OpenAI error:", err);
+  if (openai) {
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are a friendly pizza shop assistant confirming phone orders." },
+          { role: "user", content: orderText }
+        ],
+      });
+      aiReply = completion.choices[0].message.content.trim();
+    } catch (err) {
+      console.error("OpenAI error:", err);
+    }
   }
 
   response.say(aiReply);
